@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class timetable {
 public:
     void import_timetable(const char* filename);
     void print_timetable();
-    void change_status(string stime);
+    void change_status_of_time(string stime);
     void export_timetable(const char* filename);
 };
 
@@ -45,7 +46,7 @@ void timetable::print_timetable() {
     }
 }
 
-void timetable::change_status(string stime) {
+void timetable::change_status_of_time(string stime) {
     for (int i = 0; i < 20; i++) {
         if (array_time[i] == stime) {
             cout << "Status for this time:\t" << array_status[i];
@@ -55,7 +56,6 @@ void timetable::change_status(string stime) {
             else {
                 array_status[i] = "yes";
             }
-            break;
         }
     }
 }
@@ -68,15 +68,54 @@ void timetable::export_timetable(const char* filename) {
     file.close();
 }
 
+void print_main_menu() {
+    cout << "===============================================================";
+    cout << "\n\t\t\tDoctor's timetable\n";
+    cout << "===============================================================\n";
+    cout << "\n\t\t\tChoose the day:\n\n";
+    cout << "1 - Monday\n2 - Tuesday\n3 - Wednesday\n4 - Thursday\n5 - Friday\n\n";
+}
+
+void print_day_menu() {
+    cout << "\n\n===============================================================\n\n";
+    cout << "1 - Print timetable\n2 - Change status for the time\n3 - Export timetable\n4 - Goto main menu\n\n";
+}
+
 int main() {
     setlocale(LC_ALL, "rus");
 
     timetable t;
-    const char* filename = "Test_file.csv";
-    t.import_timetable(filename);
-    t.print_timetable();
-    t.change_status("17:30 - 18:00");
-    t.export_timetable(filename);
-    t.print_timetable();
+    const char* filename[5] = { "Monday.csv", "Tuesday.csv", "Wednesday.csv", "Thursday.csv", "Friday.csv" };
+    string days[5] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+choose_one: print_main_menu();
+    int function;
+    cin >> function;
+    if (function < 6) {
+        t.import_timetable(filename[function - 1]);
+    }
+    else {
+        cout << "\nChoose another time\n\n";
+        goto choose_one;
+    }
+    cout << "\nChosen day:\t" << days[function - 1];
+    do {
+        print_day_menu();
+        int function_day = 0;
+        cin >> function_day;
+        if (function_day == 1) {
+            t.print_timetable();
+        }
+        if (function_day == 2) {
+            cout << "\n\nChoose the time to change:\n\n";
+            t.change_status_of_time("17:30 - 18:00");
+        }
+        if (function_day == 3) {
+            cout << "\n\nExporting timetable...\n\n";
+            t.export_timetable(filename[function - 1]);
+        }
+        if (function_day == 4) {
+            goto choose_one;
+        }
+    } while (1);
 }
 

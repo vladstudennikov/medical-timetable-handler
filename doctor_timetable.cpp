@@ -1,7 +1,7 @@
 ﻿#include <iostream>
-#include <fstream>
 #include <string>
-#include <string.h>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -106,8 +106,11 @@ choose_one: print_main_menu();
             t.print_timetable();
         }
         if (function_day == 2) {
+            string time_change;
             cout << "\n\nChoose the time to change:\n\n";
-            t.change_status_of_time("17:30 - 18:00");
+            getline(cin, time_change);
+            getline(cin, time_change);
+            t.change_status_of_time(time_change);
         }
         if (function_day == 3) {
             cout << "\n\nExporting timetable...\n\n";

@@ -1,9 +1,54 @@
 ﻿#include <iostream>
 #include <string>
 #include <fstream>
-#include <sstream>
+#include <conio.h>
 
 using namespace std;
+class counter {
+public:
+    int i = 1;
+    void print_menu_main();
+};
+
+void counter::print_menu_main() {
+    if (i == 1) {
+        cout << "===============================================================\n";
+        cout.width(40);
+        cout << "Doctor's timetable\n";
+        cout << "===============================================================\n\n";
+        cout << ">>Monday<<\nTuesday\nWednesday\nThursday\nFriday\n";
+    }
+    else if (i == 2) {
+        cout << "===============================================================\n";
+        cout.width(40);
+        cout << "Doctor's timetable\n";
+        cout << "===============================================================\n";
+        cout << "Monday\n>>Tuesday<<\nWednesday\nThursday\nFriday\n";
+    }
+    else if (i == 3) {
+        cout << "===============================================================\n";
+        cout.width(40);
+        cout << "Doctor's timetable\n";
+        cout << "===============================================================\n";
+        cout << "Monday\nTuesday\n>>Wednesday<<\nThursday\nFriday\n";
+    }
+    else if (i == 4) {
+        cout << "===============================================================\n";
+        cout.width(40);
+        cout << "Doctor's timetable\n";
+        cout << "===============================================================\n";
+        cout << "Monday\nTuesday\nWednesday\n>>Thursday<<\nFriday\n";
+    }
+    else if (i == 5) {
+        cout << "===============================================================\n";
+        cout.width(40);
+        cout << "Doctor's timetable\n";
+        cout << "===============================================================\n";
+        cout << "Monday\nTuesday\nWednesday\nThursday\n>>Friday<<\n";
+    }
+}
+
+
 
 //array time - time when doctor works
 //array_status - is doctor busy at this time or not
@@ -12,7 +57,7 @@ class timetable {
     string array_status[21];
 public:
     void import_timetable(const char* filename);
-    void print_timetable();
+    void print_timetable(counter c);
     void change_status_of_time(string stime);
     void export_timetable(const char* filename);
 };
@@ -36,13 +81,18 @@ void timetable::import_timetable(const char* filename) {
 }
 
 //outputting info from the class - before timetable should be imported to the program
-void timetable::print_timetable() {
+void timetable::print_timetable(counter c) {
+    cout << "\n===============================================================\n\n";
+    cout << "There is a timetable for this day.\nYou can choose the time to change it's status\n\n";
     cout << '\n';
     for (int i = 0; i < 20; i++) 
     {
-        cout << array_time[i];
-        cout.width(10);    cout.setf(ios::right);
-        cout << array_status[i] << endl;
+        if (i == c.i) {
+            cout << ">>" << array_time[i] << "<<\n";
+        }
+        else {
+            cout << array_time[i] << '\n';
+        }
     }
 }
 
@@ -68,57 +118,89 @@ void timetable::export_timetable(const char* filename) {
     file.close();
 }
 
-void print_main_menu() {
-    cout << "===============================================================";
-    cout << "\n\t\t\tDoctor's timetable\n";
-    cout << "===============================================================\n";
-    cout << "\n\t\t\tChoose the day:\n\n";
-    cout << "1 - Monday\n2 - Tuesday\n3 - Wednesday\n4 - Thursday\n5 - Friday\n\n";
-}
-
-void print_day_menu() {
-    cout << "\n\n===============================================================\n\n";
-    cout << "1 - Print timetable\n2 - Change status for the time\n3 - Export timetable\n4 - Goto main menu\n\n";
-}
-
 int main() {
     setlocale(LC_ALL, "rus");
 
     timetable t;
     const char* filename[5] = { "Monday.csv", "Tuesday.csv", "Wednesday.csv", "Thursday.csv", "Friday.csv" };
     string days[5] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-choose_one: print_main_menu();
-    int function;
-    cin >> function;
-    if (function < 6) {
-        t.import_timetable(filename[function - 1]);
+choose_one: 
+    system("cls");
+    counter iter;
+    iter.print_menu_main();
+
+    while (true) {
+        char c = _getch();
+        system("cls");
+        if (c == 'w') {
+            if (iter.i == 0) {
+                iter.i = 4;
+                iter.print_menu_main();
+            }
+            else {
+                --(iter.i);
+                iter.print_menu_main();
+            }
+        }
+        if (c == 's') {
+            if (iter.i == 5) {
+                iter.i = 1;
+                iter.print_menu_main();
+            }
+            else {
+                ++(iter.i);
+                iter.print_menu_main();
+            }
+        }
+        if (c == 'a') {
+            break;
+        }
+        if (c != 'a' && c != 'w' && c != 's') {
+            iter.print_menu_main();
+        }
     }
-    else {
-        cout << "\nChoose another time\n\n";
-        goto choose_one;
+    int day_number = iter.i - 1;
+    iter.i = 0;
+
+    system("cls");
+    t.import_timetable(filename[day_number]);
+    
+    cout << "Chosen day:\t" << days[day_number];
+    t.print_timetable(iter);
+    while (true) {
+        char c = _getch();
+        system("cls");
+        if (c == 'w') {
+            if (iter.i == 0) {
+                iter.i = 19;
+                cout << "Chosen day:\t" << days[day_number];
+                t.print_timetable(iter);
+            }
+            else {
+                --(iter.i);
+                cout << "Chosen day:\t" << days[day_number];
+                t.print_timetable(iter);
+            }
+        }
+        if (c == 's') {
+            if (iter.i == 19) {
+                iter.i = 0;
+                cout << "Chosen day:\t" << days[day_number];
+                t.print_timetable(iter);
+            }
+            else {
+                ++(iter.i);
+                cout << "Chosen day:\t" << days[day_number];
+                t.print_timetable(iter);
+            }
+        }
+        if (c == 'a') {
+            break;
+        }
+        if (c != 'a' && c != 'w' && c != 's') {
+            cout << "Chosen day:\t" << days[day_number];
+            t.print_timetable(iter);
+        }
     }
-    cout << "\nChosen day:\t" << days[function - 1];
-    do {
-        print_day_menu();
-        int function_day = 0;
-        cin >> function_day;
-        if (function_day == 1) {
-            t.print_timetable();
-        }
-        if (function_day == 2) {
-            string time_change;
-            cout << "\n\nChoose the time to change:\n\n";
-            getline(cin, time_change);
-            getline(cin, time_change);
-            t.change_status_of_time(time_change);
-        }
-        if (function_day == 3) {
-            cout << "\n\nExporting timetable...\n\n";
-            t.export_timetable(filename[function - 1]);
-        }
-        if (function_day == 4) {
-            goto choose_one;
-        }
-    } while (1);
 }
 

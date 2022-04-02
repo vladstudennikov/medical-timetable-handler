@@ -10,7 +10,7 @@ CPP file exports the timetable for chosen day to the special class of the progra
 This class contains 2 arrays - with time and statuses for each time.
 
 When you choose time, the program will output the timetable fot this day on a screen.
-Then, if you choose exact time with pressing 'a' - you can change its status.
+Then, if you choose exact time by pressing 'a' - you can change its status.
 To go back for choosing day - press 'b'.
 To export timetable to the CSV file - press 'x' after choosing day and time.
 To exit the program - press 'e'.

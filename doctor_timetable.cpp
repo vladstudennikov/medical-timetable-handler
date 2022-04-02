@@ -48,14 +48,12 @@ void counter::print_menu_main() {
     }
 }
 
-
-
 //array time - time when doctor works
 //array_status - is doctor busy at this time or not
 class timetable {
-    string array_time[21];
     string array_status[21];
 public:
+    string array_time[21];
     void import_timetable(const char* filename);
     void print_timetable(counter c);
     void change_status_of_time(string stime);
@@ -83,15 +81,15 @@ void timetable::import_timetable(const char* filename) {
 //outputting info from the class - before timetable should be imported to the program
 void timetable::print_timetable(counter c) {
     cout << "\n===============================================================\n\n";
-    cout << "There is a timetable for this day.\nYou can choose the time to change it's status\n\n";
-    cout << '\n';
+    cout << "There is a timetable for this day.\nYou can choose the time to change it's status by pressing 'a'\nTo export timetable press 'x'\n";
+    cout << "To exit - press 'e'\nTo return back - press 'b'\n\n";
     for (int i = 0; i < 20; i++) 
     {
         if (i == c.i) {
-            cout << ">>" << array_time[i] << "<<\n";
+            cout << ">>" << array_time[i] << "\t" << array_status[i] << "<<" << '\n';
         }
         else {
-            cout << array_time[i] << '\n';
+            cout << array_time[i] << '\t' << array_status[i] << '\n';
         }
     }
 }
@@ -165,42 +163,45 @@ choose_one:
     system("cls");
     t.import_timetable(filename[day_number]);
     
-    cout << "Chosen day:\t" << days[day_number];
-    t.print_timetable(iter);
-    while (true) {
-        char c = _getch();
+    do {
         system("cls");
+        cout << "Chosen day:\t" << days[day_number];
+        t.print_timetable(iter);
+        char c = _getch();
+
         if (c == 'w') {
             if (iter.i == 0) {
                 iter.i = 19;
-                cout << "Chosen day:\t" << days[day_number];
-                t.print_timetable(iter);
             }
             else {
                 --(iter.i);
-                cout << "Chosen day:\t" << days[day_number];
-                t.print_timetable(iter);
             }
         }
         if (c == 's') {
             if (iter.i == 19) {
                 iter.i = 0;
-                cout << "Chosen day:\t" << days[day_number];
-                t.print_timetable(iter);
             }
             else {
                 ++(iter.i);
-                cout << "Chosen day:\t" << days[day_number];
-                t.print_timetable(iter);
             }
         }
         if (c == 'a') {
+            cout << "\nChanged status for time " << t.array_time[iter.i] << '\n';
+            t.change_status_of_time(t.array_time[iter.i]);
+            _getch();
+        }
+        if (c == 'x') {
+            t.export_timetable(filename[day_number]);
+        }
+        if (c == 'e') {
             break;
         }
-        if (c != 'a' && c != 'w' && c != 's') {
-            cout << "Chosen day:\t" << days[day_number];
-            t.print_timetable(iter);
+        if (c == 'b') {
+            goto choose_one;
         }
-    }
+        if (c != 'a' && c != 'w' && c != 's' && c != 'x') {
+            continue;
+        }
+    } while (true);
 }
 

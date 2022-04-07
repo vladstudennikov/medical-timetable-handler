@@ -15,6 +15,8 @@ To go back for choosing day - press 'b'.
 To export timetable to the CSV file - press 'x' after choosing day and time.
 To exit the program - press 'e'.
 
+Edit: python file has copies of all C++ functions and was created for future 
+
 Notes:
 - You can change CSV files, but without adding new fields to it.
 - The program will work only on Windows OS.

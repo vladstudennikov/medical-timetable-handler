@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class timetable:
 
@@ -6,8 +7,25 @@ class timetable:
     array_status = []
     chosen_day = None
 
+    def print_timetable(self):
+        if self.array_status == [] and self.array_time == []:
+            for x in range(20):
+                label_time[x]["text"] = ' '
+                label_status[x]["text"] = ' '
+            return
+        
+        for x in range(20):
+            label_time[x]["text"] = self.array_time[x]
+
+        for x in range(20):
+            label_status[x]["text"] = self.array_status[x]
+            
+
     def import_timetable(self, name):
         file = open(name, "r")
+        self.array_time = []
+        self.array_status = []
+        self.chosen_day = None;
         for line in file:
             self.array_time.append(line[:line.find(';'):])
             self.array_status.append(line[line.find(';')+1:line.find('\n'):])
@@ -20,14 +38,7 @@ class timetable:
 
         for x in range(20):
             label_status[x]["text"] = self.array_status[x]
-
-    def print_timetable(self):
-        for x in range(20):
-            label_time[x]["text"] = self.array_time[x]
-
-        for x in range(20):
-            label_status[x]["text"] = self.array_status[x]
-
+            
 
     def change_status_of_time(self, change):
         for i in self.array_time:
@@ -47,7 +58,20 @@ class timetable:
             file.write(a)
         file.close()
 
+        messagebox.showinfo("Exported", "График экспортирован")
         print("Exported ", name)
+
+    def close(self, name):        
+        msg = messagebox.askquestion("Закрыть", "Хотите закрыть расписание?")
+        if msg == 'yes':
+            self.array_time = []
+            self.array_status = []
+            print(self.chosen_day, " is closed.")
+            self.chosen_day = None
+            print("Now chosen day: ", self.chosen_day)
+            
+        self.print_timetable()
+    
 
 t = timetable()
 
@@ -250,7 +274,6 @@ text_main = tk.Label(
 )
 text_main.grid(column = 0, row = 0)
 
-nmae = ""
 #Кнопки дней
 btn_mon = tk.Button(
     master = frm_main_one,
@@ -304,12 +327,20 @@ frm_buttons = tk.Frame(
     height = 100,
     width = 400
 )
+
 frm_buttons.pack(fill = tk.X, pady = 15)
 
 btn_export = tk.Button(
     text = "Экспортировать",
     master = frm_buttons,
     command = lambda: t.export_timetable(t.chosen_day)
+    
+).pack(side = tk.RIGHT, padx = 20, pady = 15)
+
+btn_exit = tk.Button(
+    text = "Выход",
+    master = frm_buttons,
+    command = lambda: t.close(t.chosen_day)
     
 ).pack(side = tk.RIGHT, padx = 20, pady = 15)
 
